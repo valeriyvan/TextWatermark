@@ -1,0 +1,239 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		353C785F1608C5B5007D417E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 353C785E1608C5B5007D417E /* Foundation.framework */; };
+		353C78621608C5B5007D417E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 353C78611608C5B5007D417E /* main.m */; };
+		353C78661608C5B5007D417E /* TextWatermark.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 353C78651608C5B5007D417E /* TextWatermark.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		353C78581608C5B5007D417E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				353C78661608C5B5007D417E /* TextWatermark.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		353C785A1608C5B5007D417E /* TextWatermark */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextWatermark; sourceTree = BUILT_PRODUCTS_DIR; };
+		353C785E1608C5B5007D417E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		353C78611608C5B5007D417E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		353C78641608C5B5007D417E /* TextWatermark-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TextWatermark-Prefix.pch"; sourceTree = "<group>"; };
+		353C78651608C5B5007D417E /* TextWatermark.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TextWatermark.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		353C78571608C5B5007D417E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				353C785F1608C5B5007D417E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		353C784F1608C5B5007D417E = {
+			isa = PBXGroup;
+			children = (
+				353C78601608C5B5007D417E /* TextWatermark */,
+				353C785D1608C5B5007D417E /* Frameworks */,
+				353C785B1608C5B5007D417E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		353C785B1608C5B5007D417E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				353C785A1608C5B5007D417E /* TextWatermark */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		353C785D1608C5B5007D417E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				353C785E1608C5B5007D417E /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		353C78601608C5B5007D417E /* TextWatermark */ = {
+			isa = PBXGroup;
+			children = (
+				353C78611608C5B5007D417E /* main.m */,
+				353C78651608C5B5007D417E /* TextWatermark.1 */,
+				353C78631608C5B5007D417E /* Supporting Files */,
+			);
+			path = TextWatermark;
+			sourceTree = "<group>";
+		};
+		353C78631608C5B5007D417E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				353C78641608C5B5007D417E /* TextWatermark-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		353C78591608C5B5007D417E /* TextWatermark */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 353C78691608C5B5007D417E /* Build configuration list for PBXNativeTarget "TextWatermark" */;
+			buildPhases = (
+				353C78561608C5B5007D417E /* Sources */,
+				353C78571608C5B5007D417E /* Frameworks */,
+				353C78581608C5B5007D417E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TextWatermark;
+			productName = TextWatermark;
+			productReference = 353C785A1608C5B5007D417E /* TextWatermark */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		353C78511608C5B5007D417E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = w7software.com;
+			};
+			buildConfigurationList = 353C78541608C5B5007D417E /* Build configuration list for PBXProject "TextWatermark" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 353C784F1608C5B5007D417E;
+			productRefGroup = 353C785B1608C5B5007D417E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				353C78591608C5B5007D417E /* TextWatermark */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		353C78561608C5B5007D417E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				353C78621608C5B5007D417E /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		353C78671608C5B5007D417E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		353C78681608C5B5007D417E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		353C786A1608C5B5007D417E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TextWatermark/TextWatermark-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		353C786B1608C5B5007D417E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TextWatermark/TextWatermark-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		353C78541608C5B5007D417E /* Build configuration list for PBXProject "TextWatermark" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				353C78671608C5B5007D417E /* Debug */,
+				353C78681608C5B5007D417E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		353C78691608C5B5007D417E /* Build configuration list for PBXNativeTarget "TextWatermark" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				353C786A1608C5B5007D417E /* Debug */,
+				353C786B1608C5B5007D417E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 353C78511608C5B5007D417E /* Project object */;
+}
