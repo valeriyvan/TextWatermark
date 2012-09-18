@@ -10,6 +10,7 @@
 		353C785F1608C5B5007D417E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 353C785E1608C5B5007D417E /* Foundation.framework */; };
 		353C78621608C5B5007D417E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 353C78611608C5B5007D417E /* main.m */; };
 		353C78661608C5B5007D417E /* TextWatermark.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 353C78651608C5B5007D417E /* TextWatermark.1 */; };
+		353C786D1608C5DE007D417E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 353C786C1608C5DE007D417E /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,7 @@
 		353C78611608C5B5007D417E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		353C78641608C5B5007D417E /* TextWatermark-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TextWatermark-Prefix.pch"; sourceTree = "<group>"; };
 		353C78651608C5B5007D417E /* TextWatermark.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TextWatermark.1; sourceTree = "<group>"; };
+		353C786C1608C5DE007D417E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				353C786D1608C5DE007D417E /* AppKit.framework in Frameworks */,
 				353C785F1608C5B5007D417E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,6 +68,7 @@
 		353C785D1608C5B5007D417E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				353C786C1608C5DE007D417E /* AppKit.framework */,
 				353C785E1608C5B5007D417E /* Foundation.framework */,
 			);
 			name = Frameworks;
