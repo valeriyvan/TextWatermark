@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import "NSFileManager+NameForTempFile.h"
 
 #define kDefaultXOffset 0.0
 #define kDefaultYOffest 0.0
@@ -17,6 +18,7 @@
 #define kDefaultFontName @"Helvetica"
 #define kDefaultFontSize 50.0
 #define kDefaultCorner 1
+#define kCompressionFactor 0.98
 
 int main(int argc, char * argv[])
 {
@@ -30,12 +32,16 @@ int main(int argc, char * argv[])
         SEL colorSelector = @selector(kDefaultColor);
         CGFloat fontSize = kDefaultFontSize;
         NSString *fontName = kDefaultFontName;
+        NSString *folderForResultingFiles = nil;
+        NSString *folderWhereOriginalFilesWillBeMovedTo = nil;
+        float compressionFactor = kCompressionFactor;
+        BOOL overwrireFiles = NO;
         int corner = kDefaultCorner;
         int c;
         
         opterr = 0; // supresses message prints in getopt
         
-        while ((c = getopt (argc, argv, "x:y:r:a:c:f:s:1234h")) != -1) {
+        while ((c = getopt (argc, argv, "x:y:r:a:c:f:s:d:D:q:1234oh")) != -1) {
             switch (c)
             {
                 case 'x':
@@ -54,7 +60,10 @@ int main(int argc, char * argv[])
                     break;
                 case 'r':
                     rotation = atof(optarg);
-                    // any value matters
+                    if (rotation!=0 && rotation!=90 && rotation!=-90) {
+                        fprintf(stderr, "rotation angle should be 0, -90 or 90 degrees\n");
+                        return 0;
+                    }
                     break;
                 case 'a':
                     alpha = atof(optarg);
@@ -80,6 +89,12 @@ int main(int argc, char * argv[])
                         return 0;
                     }
                     break;
+                case 'd':
+                    folderForResultingFiles = [NSString stringWithCString:optarg encoding:NSUTF8StringEncoding];
+                    break;
+                case 'D':
+                    folderWhereOriginalFilesWillBeMovedTo = [NSString stringWithCString:optarg encoding:NSUTF8StringEncoding];
+                    break;
                 case '1':
                     corner = 1;
                     break;
@@ -92,9 +107,19 @@ int main(int argc, char * argv[])
                 case '4':
                     corner = 4;
                     break;
+                case 'o':
+                    overwrireFiles = YES;
+                    break;
+                case 'q':
+                    compressionFactor = atof(optarg);
+                    if (compressionFactor<0.0 || compressionFactor>1.0) {
+                        fprintf(stderr, "compression should be float from 0 up to 1\n");
+                        return 0;
+                    }
+                    break;
                 case 'h':
                     fprintf(stderr, "Images text watermarking utility. Ⓒ www.w7software.com\n");
-                    fprintf(stderr, "%s [-x x_offest] [-y y_offset] [-r 0|90|-90] [-a alpha] [-c color] [-f font name] [-s font size] [1|2|3|4] text file1 [file2 ... filen]\n", strrchr(argv[0], '/')+1);
+                    fprintf(stderr, "%s [-x x_offest] [-y y_offset] [-r 0|90|-90] [-a alpha] [-c color] [-f font name] [-s font size] [1|2|3|4] (-o|(-d res_folder)) [-q comression] text file1 [file2 ... filen]\n", strrchr(argv[0], '/')+1);
                     fprintf(stderr, "Inserts text into image files specified. Only JPG format supported now.\n" );
                     fprintf(stderr, "-x float for x offset of text, 0 is default\n");
                     fprintf(stderr, "-y float for y offset of text, 0 is default\n");
@@ -105,9 +130,14 @@ int main(int argc, char * argv[])
                     fprintf(stderr, "-s float for font size, 50 is default\n");
                     fprintf(stderr, "-a float from 0.0 to 1.0 alpha component of text color, 1.0 is default\n");
                     fprintf(stderr, "-1 .. -4 corner for text origin, counter clockwise starting from 1 for down left, 1 is default\n");
+                    fprintf(stderr, "-o files will be overwritten or\n");
+                    fprintf(stderr, "-d specifies folder for resulting files\n");
+                    fprintf(stderr, "-D specifies folder where origin images will be moved on success; couldn't be used with -o key\n");
+                    fprintf(stderr, "-q float from 0.0 to 1.0 for quality of output JPG images, 0.98 is default\n");
+                    fprintf(stderr, "One of -o or -d should be specified explicitly.\n");
                     return 1;
                 case '?':
-                    if ( strchr("xyac", optopt) )
+                    if ( strchr("xyracfsdDq", optopt) )
                         fprintf (stderr, "Option -%c requires an argument.\n", optopt);
                     else if (isprint (optopt))
                         fprintf (stderr, "Unknown option `-%c'.\n", optopt);
@@ -122,6 +152,35 @@ int main(int argc, char * argv[])
         //NSLog(@"argc=%d, optind=%d\n", argc, optind);
         if (argc - optind < 2 ) { // TODO: что-то здесь не так!!!
             fprintf(stderr, "Two parameters are necessary. Run with -h for help.\n" );
+            return 1;
+        }
+        
+        if ((folderForResultingFiles==nil && overwrireFiles==NO) || (folderForResultingFiles!=nil && overwrireFiles==YES)) {
+            fprintf(stderr, "One of -o or -d should be specified explicitly. Run with -h for help.\n");
+            return 1;
+        }
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL isDirectory;
+        if (folderForResultingFiles && ![fileManager fileExistsAtPath:folderForResultingFiles isDirectory:&isDirectory]) {
+            fprintf(stderr, "Directory %s doesn't exist\n", [folderForResultingFiles cStringUsingEncoding:NSUTF8StringEncoding]);
+            return 1;
+        }
+        if (folderForResultingFiles && !isDirectory) {
+            fprintf(stderr, "%s is not a directory\n", [folderForResultingFiles cStringUsingEncoding:NSUTF8StringEncoding]);
+            return 1;
+        }
+
+        if (folderWhereOriginalFilesWillBeMovedTo!=nil && overwrireFiles!=NO) {
+            fprintf(stderr, "-D coudn't be used with -o. Run with -h for help.\n");
+            return 1;
+        }
+        if (folderWhereOriginalFilesWillBeMovedTo && ![fileManager fileExistsAtPath:folderWhereOriginalFilesWillBeMovedTo isDirectory:&isDirectory]) {
+            fprintf(stderr, "Directory %s doesn't exist\n", [folderWhereOriginalFilesWillBeMovedTo cStringUsingEncoding:NSUTF8StringEncoding]);
+            return 1;
+        }
+        if (folderWhereOriginalFilesWillBeMovedTo && !isDirectory) {
+            fprintf(stderr, "%s is not a directory\n", [folderWhereOriginalFilesWillBeMovedTo cStringUsingEncoding:NSUTF8StringEncoding]);
             return 1;
         }
         
@@ -151,10 +210,9 @@ int main(int argc, char * argv[])
                 text = [debugText copy];
             }
             
-            //NSSize sizeOfText = [text sizeWithAttributes:stringAttributes];
             NSRect sizeOfText = [text boundingRectWithSize:NSMakeSize(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:stringAttributes];
             
-            if (![[NSFileManager defaultManager] fileExistsAtPath:pathname]) {
+            if (![fileManager fileExistsAtPath:pathname]) {
                 fprintf(stderr, "Doesn't exist file %s\n", argv[index]);
                 continue;
             }
@@ -164,6 +222,16 @@ int main(int argc, char * argv[])
                 fprintf(stderr, "Couldn't open image from file %s\n", argv[index]);
                 continue;
             }
+            
+            // Get compression rate
+            //NSTIFFCompression compression;
+            //float compressionFactor;
+            //NSData *imageData = [NSData dataWithContentsOfFile:pathname];
+            //if (!imageData)
+            //    NSLog(@"Error reading data of %@", pathname);
+            //NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+            //[imageRep getCompression:&compression factor:&compressionFactor];
+            //NSLog(@"compressionFactor = %f", compressionFactor);
             
             CGFloat realx, realy;
             // (0,0) of a string is it's down left corner, obviously.
@@ -184,7 +252,7 @@ int main(int argc, char * argv[])
                         realx = x_offset;
                         realy = y_offset + sizeOfText.size.width; // (0,0) of text is flipped to be up
                     } else {
-                        fprintf(stderr, "Somethig wrong with rotation angle %f\n", rotation);
+                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
                     }
                     break;
                 case 2:
@@ -201,7 +269,7 @@ int main(int argc, char * argv[])
                         realx = image.size.width - x_offset - fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
                         realy = y_offset + sizeOfText.size.width; // (0,0) of text is flipped to be up
                     } else {
-                        fprintf(stderr, "Somethig wrong with rotation angle %f\n", rotation);
+                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
                     }
                     break;
                 case 3:
@@ -218,7 +286,7 @@ int main(int argc, char * argv[])
                         realx = image.size.width - x_offset - fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
                         realy = image.size.height - y_offset; // (0,0) of text is flipped to be up
                     } else {
-                        fprintf(stderr, "Somethig wrong with rotation angle %f\n", rotation);
+                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
                     }
                     break;
                 case 4:
@@ -235,7 +303,7 @@ int main(int argc, char * argv[])
                         realx = x_offset;
                         realy = image.size.height - y_offset; // (0,0) of text is flipped to be up
                     } else {
-                        fprintf(stderr, "Somethig wrong with rotation angle %f\n", rotation);
+                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
                     }
                     break;
             }
@@ -249,11 +317,11 @@ int main(int argc, char * argv[])
             [transform translateXBy:realx yBy:realy];
             [transform rotateByDegrees:rotation];
             [transform translateXBy:-realx yBy:-realy];
-            [NSGraphicsContext saveGraphicsState];
+            //[NSGraphicsContext saveGraphicsState]; // TODO: это лишнее, мне кажется
             [transform concat];
             //[myAttributedString drawAtPoint:myPoint];
             [text drawAtPoint: NSMakePoint(realx, realy) withAttributes: stringAttributes];
-            [NSGraphicsContext restoreGraphicsState];
+            //[NSGraphicsContext restoreGraphicsState];
             
             [image unlockFocus];
             
@@ -261,12 +329,39 @@ int main(int argc, char * argv[])
             // Cache the reduced image
             NSData *imageData = [image TIFFRepresentation]; //The call to "TIFFRepresentation" is essential otherwise you may not get a valid image.
             NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-            NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.9] forKey:NSImageCompressionFactor];
+            NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:compressionFactor] forKey:NSImageCompressionFactor];
             imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
-            [imageData writeToFile:pathname atomically:NO];
             
-            fprintf(stderr, "%s finished\n", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
+            NSString *resPathname;
+            if (overwrireFiles) {
+                resPathname = [pathname copy];
+            } else {
+                NSString *filenameAndExtention = [pathname lastPathComponent];
+                resPathname = [folderForResultingFiles stringByAppendingPathComponent:filenameAndExtention];
+                if ([fileManager fileExistsAtPath:resPathname]) {
+                    resPathname = [fileManager uniqueFileName:resPathname];
+                }
+            }
             
+            BOOL writingSuccess = [imageData writeToFile:resPathname atomically:NO];
+            
+            if (!writingSuccess) {
+                fprintf(stderr, "Writing file %s wasn't successful\n", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
+            } else {
+                fprintf(stderr, "Finished with file %s", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
+                if (folderWhereOriginalFilesWillBeMovedTo) {
+                    NSError *error;
+                    NSString *filename = [pathname lastPathComponent];
+                    NSString *newPath = [folderWhereOriginalFilesWillBeMovedTo stringByAppendingPathComponent:filename];
+                    if ([fileManager fileExistsAtPath:newPath]) {
+                        newPath = [fileManager uniqueFileName:newPath];
+                    }
+                    if (![fileManager moveItemAtPath:pathname toPath:newPath error:&error]) {
+                        fprintf(stderr, ", could'n move original into folder %s", [folderWhereOriginalFilesWillBeMovedTo cStringUsingEncoding:NSUTF8StringEncoding]);
+                    }
+                }
+                fprintf(stderr, "\n");
+            }
         }
         
     }

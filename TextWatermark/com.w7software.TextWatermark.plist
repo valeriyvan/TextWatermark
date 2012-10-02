@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Disabled</key>
+	<false/>
+	<key>Label</key>
+	<string>com.w7software.TextWatermark</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/Scripts/w7software/textwatermarking_script.sh</string>
+	</array>
+	<key>WatchPaths</key>
+	<array>
+		<string>/Users/valeriyvan/Desktop/Watermark Images</string>
+	</array>
+	<key>WorkingDirectory</key>
+	<string>/Users/valeriyvan/Desktop/Watermark Images</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>Debug</key>
+	<true/>
+	<key>onDemand</key>
+	<true/>
+</dict>
+</plist>
