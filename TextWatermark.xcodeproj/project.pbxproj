@@ -11,6 +11,7 @@
 		353C78621608C5B5007D417E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 353C78611608C5B5007D417E /* main.m */; };
 		353C78661608C5B5007D417E /* TextWatermark.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 353C78651608C5B5007D417E /* TextWatermark.1 */; };
 		353C786D1608C5DE007D417E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 353C786C1608C5DE007D417E /* AppKit.framework */; };
+		35BCFBA1160D49AB004893B6 /* NSFileManager+NameForTempFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 35BCFBA0160D49AB004893B6 /* NSFileManager+NameForTempFile.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,8 @@
 		353C78641608C5B5007D417E /* TextWatermark-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TextWatermark-Prefix.pch"; sourceTree = "<group>"; };
 		353C78651608C5B5007D417E /* TextWatermark.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TextWatermark.1; sourceTree = "<group>"; };
 		353C786C1608C5DE007D417E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		35BCFB9F160D49AB004893B6 /* NSFileManager+NameForTempFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+NameForTempFile.h"; sourceTree = "<group>"; };
+		35BCFBA0160D49AB004893B6 /* NSFileManager+NameForTempFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+NameForTempFile.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +81,8 @@
 			isa = PBXGroup;
 			children = (
 				353C78611608C5B5007D417E /* main.m */,
+				35BCFB9F160D49AB004893B6 /* NSFileManager+NameForTempFile.h */,
+				35BCFBA0160D49AB004893B6 /* NSFileManager+NameForTempFile.m */,
 				353C78651608C5B5007D417E /* TextWatermark.1 */,
 				353C78631608C5B5007D417E /* Supporting Files */,
 			);
@@ -144,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				353C78621608C5B5007D417E /* main.m in Sources */,
+				35BCFBA1160D49AB004893B6 /* NSFileManager+NameForTempFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +242,7 @@
 				353C786B1608C5B5007D417E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
