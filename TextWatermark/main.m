@@ -195,174 +195,179 @@ int main(int argc, char * argv[])
         NSString* text = [NSString stringWithCString:argv[optind] encoding:NSUTF8StringEncoding];
         
         for (int index = optind+1; index < argc; index++) {
-            
-            NSString *pathname = [NSString stringWithCString:argv[index] encoding:NSUTF8StringEncoding];
-            
-            if ([text isEqualToString:@"debug"]) {
-                // Change "debug" text with:
-                // (realx, realy)> commandline
-                NSMutableString *debugText = [NSMutableString stringWithFormat:@"(%.1f,%.1f)> ", x_offset, y_offset];
-                [debugText appendString:[NSString stringWithCString:argv[1] encoding:NSUTF8StringEncoding]];
-                for (int i=2; i<argc; i++) {
-                    [debugText appendString:@" "];
-                    [debugText appendString:[NSString stringWithCString:argv[i] encoding:NSUTF8StringEncoding]];
+            @autoreleasepool {
+                // without this GB memory is not freed on every step,
+                // and memory footpring for 150 of photographs 5MB each easy goes close 20GB and freeses
+                // system with 4GB RAM
+
+                NSString *pathname = [NSString stringWithCString:argv[index] encoding:NSUTF8StringEncoding];
+                
+                if ([text isEqualToString:@"debug"]) {
+                    // Change "debug" text with:
+                    // (realx, realy)> commandline
+                    NSMutableString *debugText = [NSMutableString stringWithFormat:@"(%.1f,%.1f)> ", x_offset, y_offset];
+                    [debugText appendString:[NSString stringWithCString:argv[1] encoding:NSUTF8StringEncoding]];
+                    for (int i=2; i<argc; i++) {
+                        [debugText appendString:@" "];
+                        [debugText appendString:[NSString stringWithCString:argv[i] encoding:NSUTF8StringEncoding]];
+                    }
+                    text = [debugText copy];
                 }
-                text = [debugText copy];
-            }
-            
-            NSRect sizeOfText = [text boundingRectWithSize:NSMakeSize(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:stringAttributes];
-            
-            if (![fileManager fileExistsAtPath:pathname]) {
-                fprintf(stderr, "Doesn't exist file %s\n", argv[index]);
-                continue;
-            }
-            
-            NSImage* image = [[NSImage alloc] initWithContentsOfFile: pathname];
-            if (!image) {
-                fprintf(stderr, "Couldn't open image from file %s\n", argv[index]);
-                continue;
-            }
-            
-            // Get compression rate
-            //NSTIFFCompression compression;
-            //float compressionFactor;
-            //NSData *imageData = [NSData dataWithContentsOfFile:pathname];
-            //if (!imageData)
-            //    NSLog(@"Error reading data of %@", pathname);
-            //NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-            //[imageRep getCompression:&compression factor:&compressionFactor];
-            //NSLog(@"compressionFactor = %f", compressionFactor);
-            
-            CGFloat realx, realy;
-            // (0,0) of a string is it's down left corner, obviously.
-            // remember that doing following transforms
-            switch (corner) {
-                default:
-                case 1:
-                    if (rotation==0) {
-                        // text is horisontal, everythins is straghtforward
-                        realx = x_offset;
-                        realy = y_offset;
-                    } else if (rotation==90) {
-                        // text is vertical from down up
-                        realx = x_offset + fontSize; // without this, provided x_offset is 0, vertical text will be off the left edge
-                        realy = y_offset;
-                    } else if (rotation==-90) {
-                        // text is vertical from up down
-                        realx = x_offset;
-                        realy = y_offset + sizeOfText.size.width; // (0,0) of text is flipped to be up
-                    } else {
-                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
-                    }
-                    break;
-                case 2:
-                    if (rotation==0) {
-                        // horizontal
-                        realx = image.size.width - x_offset - sizeOfText.size.width;
-                        realy = y_offset;
-                    } else if (rotation==90) {
-                        // text is vertical from down up
-                        realx = image.size.width -  x_offset;
-                        realy = y_offset;
-                    } else if (rotation==-90) {
-                        // text is vertical from up down
-                        realx = image.size.width - x_offset - fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
-                        realy = y_offset + sizeOfText.size.width; // (0,0) of text is flipped to be up
-                    } else {
-                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
-                    }
-                    break;
-                case 3:
-                    if (rotation==0) {
-                        // horizontal
-                        realx = image.size.width - x_offset - sizeOfText.size.width;
-                        realy = image.size.height - y_offset - fontSize;
-                    } else if (rotation==90) {
-                        // text is vertical from down up
-                        realx = image.size.width -  x_offset;
-                        realy = image.size.height - y_offset - sizeOfText.size.width;
-                    } else if (rotation==-90) {
-                        // text is vertical from up down
-                        realx = image.size.width - x_offset - fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
-                        realy = image.size.height - y_offset; // (0,0) of text is flipped to be up
-                    } else {
-                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
-                    }
-                    break;
-                case 4:
-                    if (rotation==0) {
-                        // horizontal
-                        realx = x_offset;
-                        realy = image.size.height - y_offset - fontSize;
-                    } else if (rotation==90) {
-                        // text is vertical from down up
-                        realx = x_offset + fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
-                        realy = image.size.height - y_offset - sizeOfText.size.width;
-                    } else if (rotation==-90) {
-                        // text is vertical from up down
-                        realx = x_offset;
-                        realy = image.size.height - y_offset; // (0,0) of text is flipped to be up
-                    } else {
-                        fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
-                    }
-                    break;
-            }
-            // Not a problem if text is bigger that image
-            //NSLog(@"x=%f, y=%f\n", realx, realy);
-            
-            [image lockFocus];
-            
-            // Explained http://www.cocoabuilder.com/archive/cocoa/222242-nsattributedstring-in-nsaffinetransform.html
-            NSAffineTransform* transform = [NSAffineTransform transform];
-            [transform translateXBy:realx yBy:realy];
-            [transform rotateByDegrees:rotation];
-            [transform translateXBy:-realx yBy:-realy];
-            //[NSGraphicsContext saveGraphicsState]; // TODO: это лишнее, мне кажется
-            [transform concat];
-            //[myAttributedString drawAtPoint:myPoint];
-            [text drawAtPoint: NSMakePoint(realx, realy) withAttributes: stringAttributes];
-            //[NSGraphicsContext restoreGraphicsState];
-            
-            [image unlockFocus];
-            
-            // Save file. based on http://stackoverflow.com/questions/3038820/how-to-save-a-nsimage-as-a-new-file
-            // Cache the reduced image
-            NSData *imageData = [image TIFFRepresentation]; //The call to "TIFFRepresentation" is essential otherwise you may not get a valid image.
-            NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-            NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:compressionFactor] forKey:NSImageCompressionFactor];
-            imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
-            
-            NSString *resPathname;
-            if (overwrireFiles) {
-                resPathname = [pathname copy];
-            } else {
-                NSString *filenameAndExtention = [pathname lastPathComponent];
-                resPathname = [folderForResultingFiles stringByAppendingPathComponent:filenameAndExtention];
-                if ([fileManager fileExistsAtPath:resPathname]) {
-                    resPathname = [fileManager uniqueFileName:resPathname];
+                
+                NSRect sizeOfText = [text boundingRectWithSize:NSMakeSize(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:stringAttributes];
+                
+                if (![fileManager fileExistsAtPath:pathname]) {
+                    fprintf(stderr, "Doesn't exist file %s\n", argv[index]);
+                    continue;
                 }
-            }
-            
-            BOOL writingSuccess = [imageData writeToFile:resPathname atomically:NO];
-            
-            if (!writingSuccess) {
-                fprintf(stderr, "Writing file %s wasn't successful\n", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
-            } else {
-                fprintf(stderr, "Finished with file %s", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
-                if (folderWhereOriginalFilesWillBeMovedTo) {
-                    NSError *error;
-                    NSString *filename = [pathname lastPathComponent];
-                    NSString *newPath = [folderWhereOriginalFilesWillBeMovedTo stringByAppendingPathComponent:filename];
-                    if ([fileManager fileExistsAtPath:newPath]) {
-                        newPath = [fileManager uniqueFileName:newPath];
-                    }
-                    if (![fileManager moveItemAtPath:pathname toPath:newPath error:&error]) {
-                        fprintf(stderr, ", could'n move original into folder %s", [folderWhereOriginalFilesWillBeMovedTo cStringUsingEncoding:NSUTF8StringEncoding]);
+                
+                NSImage* image = [[NSImage alloc] initWithContentsOfFile: pathname];
+                if (!image) {
+                    fprintf(stderr, "Couldn't open image from file %s\n", argv[index]);
+                    continue;
+                }
+                
+                // Get compression rate
+                //NSTIFFCompression compression;
+                //float compressionFactor;
+                //NSData *imageData = [NSData dataWithContentsOfFile:pathname];
+                //if (!imageData)
+                //    NSLog(@"Error reading data of %@", pathname);
+                //NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+                //[imageRep getCompression:&compression factor:&compressionFactor];
+                //NSLog(@"compressionFactor = %f", compressionFactor);
+                
+                CGFloat realx, realy;
+                // (0,0) of a string is it's down left corner, obviously.
+                // remember that doing following transforms
+                switch (corner) {
+                    default:
+                    case 1:
+                        if (rotation==0) {
+                            // text is horisontal, everythins is straghtforward
+                            realx = x_offset;
+                            realy = y_offset;
+                        } else if (rotation==90) {
+                            // text is vertical from down up
+                            realx = x_offset + fontSize; // without this, provided x_offset is 0, vertical text will be off the left edge
+                            realy = y_offset;
+                        } else if (rotation==-90) {
+                            // text is vertical from up down
+                            realx = x_offset;
+                            realy = y_offset + sizeOfText.size.width; // (0,0) of text is flipped to be up
+                        } else {
+                            fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
+                        }
+                        break;
+                    case 2:
+                        if (rotation==0) {
+                            // horizontal
+                            realx = image.size.width - x_offset - sizeOfText.size.width;
+                            realy = y_offset;
+                        } else if (rotation==90) {
+                            // text is vertical from down up
+                            realx = image.size.width -  x_offset;
+                            realy = y_offset;
+                        } else if (rotation==-90) {
+                            // text is vertical from up down
+                            realx = image.size.width - x_offset - fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
+                            realy = y_offset + sizeOfText.size.width; // (0,0) of text is flipped to be up
+                        } else {
+                            fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
+                        }
+                        break;
+                    case 3:
+                        if (rotation==0) {
+                            // horizontal
+                            realx = image.size.width - x_offset - sizeOfText.size.width;
+                            realy = image.size.height - y_offset - fontSize;
+                        } else if (rotation==90) {
+                            // text is vertical from down up
+                            realx = image.size.width -  x_offset;
+                            realy = image.size.height - y_offset - sizeOfText.size.width;
+                        } else if (rotation==-90) {
+                            // text is vertical from up down
+                            realx = image.size.width - x_offset - fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
+                            realy = image.size.height - y_offset; // (0,0) of text is flipped to be up
+                        } else {
+                            fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
+                        }
+                        break;
+                    case 4:
+                        if (rotation==0) {
+                            // horizontal
+                            realx = x_offset;
+                            realy = image.size.height - y_offset - fontSize;
+                        } else if (rotation==90) {
+                            // text is vertical from down up
+                            realx = x_offset + fontSize; // without this, provided x_offset is 0, vertical text will be off the right edge
+                            realy = image.size.height - y_offset - sizeOfText.size.width;
+                        } else if (rotation==-90) {
+                            // text is vertical from up down
+                            realx = x_offset;
+                            realy = image.size.height - y_offset; // (0,0) of text is flipped to be up
+                        } else {
+                            fprintf(stderr, "Something wrong with rotation angle %f\n", rotation);
+                        }
+                        break;
+                }
+                // Not a problem if text is bigger that image
+                //NSLog(@"x=%f, y=%f\n", realx, realy);
+                
+                [image lockFocus];
+                
+                // Explained http://www.cocoabuilder.com/archive/cocoa/222242-nsattributedstring-in-nsaffinetransform.html
+                NSAffineTransform* transform = [NSAffineTransform transform];
+                [transform translateXBy:realx yBy:realy];
+                [transform rotateByDegrees:rotation];
+                [transform translateXBy:-realx yBy:-realy];
+                //[NSGraphicsContext saveGraphicsState]; // TODO: это лишнее, мне кажется
+                [transform concat];
+                //[myAttributedString drawAtPoint:myPoint];
+                [text drawAtPoint: NSMakePoint(realx, realy) withAttributes: stringAttributes];
+                //[NSGraphicsContext restoreGraphicsState];
+                
+                [image unlockFocus];
+                
+                // Save file. based on http://stackoverflow.com/questions/3038820/how-to-save-a-nsimage-as-a-new-file
+                // Cache the reduced image
+                NSData *imageData = [image TIFFRepresentation]; //The call to "TIFFRepresentation" is essential otherwise you may not get a valid image.
+                NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+                NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:compressionFactor] forKey:NSImageCompressionFactor];
+                imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+                
+                NSString *resPathname;
+                if (overwrireFiles) {
+                    resPathname = [pathname copy];
+                } else {
+                    NSString *filenameAndExtention = [pathname lastPathComponent];
+                    resPathname = [folderForResultingFiles stringByAppendingPathComponent:filenameAndExtention];
+                    if ([fileManager fileExistsAtPath:resPathname]) {
+                        resPathname = [fileManager uniqueFileName:resPathname];
                     }
                 }
-                fprintf(stderr, "\n");
-            }
-        }
+                
+                BOOL writingSuccess = [imageData writeToFile:resPathname atomically:NO];
+                
+                if (!writingSuccess) {
+                    fprintf(stderr, "Writing file %s wasn't successful\n", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
+                } else {
+                    fprintf(stderr, "Finished with file %s", [pathname cStringUsingEncoding:NSUTF8StringEncoding]);
+                    if (folderWhereOriginalFilesWillBeMovedTo) {
+                        NSError *error;
+                        NSString *filename = [pathname lastPathComponent];
+                        NSString *newPath = [folderWhereOriginalFilesWillBeMovedTo stringByAppendingPathComponent:filename];
+                        if ([fileManager fileExistsAtPath:newPath]) {
+                            newPath = [fileManager uniqueFileName:newPath];
+                        }
+                        if (![fileManager moveItemAtPath:pathname toPath:newPath error:&error]) {
+                            fprintf(stderr, ", could'n move original into folder %s", [folderWhereOriginalFilesWillBeMovedTo cStringUsingEncoding:NSUTF8StringEncoding]);
+                        }
+                    }
+                    fprintf(stderr, "\n");
+                }
+            } // @autoreleasepool
+        } // for
         
     }
     
