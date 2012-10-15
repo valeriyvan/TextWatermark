@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import "NSFileManager+NameForTempFile.h"
+#import <Magick++.h>
 
 #define kDefaultXOffset 0.0
 #define kDefaultYOffest 0.0
@@ -19,6 +20,8 @@
 #define kDefaultFontSize 50.0
 #define kDefaultCorner 1
 #define kCompressionFactor 0.98
+
+using namespace Magick;
 
 int main(int argc, char * argv[])
 {
@@ -132,9 +135,9 @@ int main(int argc, char * argv[])
                     fprintf(stderr, "-1 .. -4 corner for text origin, counter clockwise starting from 1 for down left, 1 is default\n");
                     fprintf(stderr, "-o files will be overwritten or\n");
                     fprintf(stderr, "-d specifies folder for resulting files\n");
-                    fprintf(stderr, "-D specifies folder where origin images will be moved on success; couldn't be used with -o key\n");
-                    fprintf(stderr, "-q float from 0.0 to 1.0 for quality of output JPG images, 0.98 is default\n");
                     fprintf(stderr, "One of -o or -d should be specified explicitly.\n");
+                    fprintf(stderr, "-D specifies folder where origin images will be moved on success; couldn't be used with -o key\n");
+                    fprintf(stderr, "-q float from 0.0 to 1.0 for quality of output JPG images, by default values taken from source image are applied to each processed image\n");
                     return 1;
                 case '?':
                     if ( strchr("xyracfsdDq", optopt) )
@@ -227,14 +230,9 @@ int main(int argc, char * argv[])
                     continue;
                 }
                 
-                // Get compression rate
-                //NSTIFFCompression compression;
-                //float compressionFactor;
-                //NSData *imageData = [NSData dataWithContentsOfFile:pathname];
-                //if (!imageData)
-                //    NSLog(@"Error reading data of %@", pathname);
-                //NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-                //[imageRep getCompression:&compression factor:&compressionFactor];
+                // Get compression factor from image with help of Magick++ library
+                Image magick_image( [pathname cStringUsingEncoding:NSUTF8StringEncoding] );
+                compressionFactor = float(magick_image.quality()) / 100.0;
                 //NSLog(@"compressionFactor = %f", compressionFactor);
                 
                 CGFloat realx, realy;
