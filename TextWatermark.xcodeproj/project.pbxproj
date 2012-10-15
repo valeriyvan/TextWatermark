@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		352FEB62162B8A56005E7C9C /* libMagick++.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 352FEB61162B8A56005E7C9C /* libMagick++.5.dylib */; };
 		353C785F1608C5B5007D417E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 353C785E1608C5B5007D417E /* Foundation.framework */; };
 		353C78621608C5B5007D417E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 353C78611608C5B5007D417E /* main.m */; };
 		353C78661608C5B5007D417E /* TextWatermark.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 353C78651608C5B5007D417E /* TextWatermark.1 */; };
@@ -28,6 +29,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		352FEB61162B8A56005E7C9C /* libMagick++.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagick++.5.dylib"; sourceTree = "<group>"; };
 		353C785A1608C5B5007D417E /* TextWatermark */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextWatermark; sourceTree = BUILT_PRODUCTS_DIR; };
 		353C785E1608C5B5007D417E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		353C78611608C5B5007D417E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -45,6 +47,7 @@
 			files = (
 				353C786D1608C5DE007D417E /* AppKit.framework in Frameworks */,
 				353C785F1608C5B5007D417E /* Foundation.framework in Frameworks */,
+				352FEB62162B8A56005E7C9C /* libMagick++.5.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +74,7 @@
 		353C785D1608C5B5007D417E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				352FEB61162B8A56005E7C9C /* libMagick++.5.dylib */,
 				353C786C1608C5DE007D417E /* AppKit.framework */,
 				353C785E1608C5B5007D417E /* Foundation.framework */,
 			);
@@ -178,9 +182,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 			};
 			name = Debug;
 		};
@@ -200,26 +204,48 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = macosx10.7;
 			};
 			name = Release;
 		};
 		353C786A1608C5B5007D417E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TextWatermark/TextWatermark-Prefix.pch";
+				HEADER_SEARCH_PATHS = "/Users/valeriyvan/Documents/ImageMagick-6.7.9-10/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "-Dmacintosh=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		353C786B1608C5B5007D417E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TextWatermark/TextWatermark-Prefix.pch";
+				HEADER_SEARCH_PATHS = "/Users/valeriyvan/Documents/ImageMagick-6.7.9-10/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "-Dmacintosh=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
