@@ -187,7 +187,10 @@ int main(int argc, char * argv[])
             return 1;
         }
         
+        #pragma warning( push )
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         NSColor *colorWithoutAlpha = [[NSColor class] performSelector:colorSelector];
+        #pragma warning( pop )
         NSColor *color = [colorWithoutAlpha colorWithAlphaComponent:alpha];
         NSFont *font = [NSFont fontWithName:fontName size:fontSize];
         NSDictionary *stringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
